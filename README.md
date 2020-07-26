@@ -80,16 +80,16 @@ import (
 )
 
 func main() {
-    r := gin.New()
-    middleware := httpmetrics.GinMiddleware(&r.RouterGroup)
-    // 初始化中间件时可以自定义抓取路径
-	// middleware := httpmetrics.GinMiddleware(&r.RouterGroup, "/monitor/metrics")
-	r.Use(middleware)
-	root := r.Group("/api")
-	root.GET("/hello/:id", func(c *gin.Context) {
-		c.String(http.StatusOK, "hello %s", c.Param("id"))
-	})
-    r.Run(":8080")
+  r := gin.New()
+  middleware := httpmetrics.GinMiddleware(&r.RouterGroup)
+  // 初始化中间件时可以自定义抓取路径
+  // middleware := httpmetrics.GinMiddleware(&r.RouterGroup, "/monitor/metrics")
+  r.Use(middleware)
+  root := r.Group("/api")
+  root.GET("/hello/:id", func(c *gin.Context) {
+    c.String(http.StatusOK, "hello %s", c.Param("id"))
+  })
+  r.Run(":8080")
 }
 ```
 
@@ -106,13 +106,13 @@ import (
 )
 
 func main() {
-    mux := httpmetrics.NewServeMux(http.DefaultServeMux)
-    // 可自定义抓取路径
-	// mux := httpmetrics.NewServeMux(http.DefaultServeMux, "/monitor/metrics")
-	mux.HandleFunc("/api/hello", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("hello world!"))
-	})
-	http.ListenAndServe(":8082", mux)
+  mux := httpmetrics.NewServeMux(http.DefaultServeMux)
+  // 可自定义抓取路径
+  // mux := httpmetrics.NewServeMux(http.DefaultServeMux, "/monitor/metrics")
+  mux.HandleFunc("/api/hello", func(w http.ResponseWriter, r *http.Request) {
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("hello world!"))
+  })
+  http.ListenAndServe(":8082", mux)
 }
 ```
