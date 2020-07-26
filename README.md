@@ -9,6 +9,8 @@ Prometheus 的 http 统计指标和中间件
 
 [指标示例](example.prom)
 
+#### HTTP 指标
+
 - `# TYPE http_requests_total counter` HTTP 请求总数量计数器
 
 ```
