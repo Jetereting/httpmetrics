@@ -101,7 +101,6 @@ package main
 import (
     "net/http"
 
-    "github.com/gin-gonic/gin"
     "gogs.xiaoyuanjijiehao.com/ops/httpmetrics"
 )
 
