@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
@@ -37,7 +38,7 @@ func TestServerMuxMetrics(t *testing.T) {
 			w.Write([]byte(`hello world!`))
 			return
 		}
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusBadGateway)
 	})
 	for i := 0; i < 20; i++ {
 		performRequest(s, "GET", "/test")
@@ -54,17 +55,17 @@ func TestGinMiddlewareMetrics(t *testing.T) {
 	r := gin.New()
 	metrics := GinMiddleware(&r.RouterGroup)
 	r.Use(metrics)
-	r.GET("/test", func(c *gin.Context) {
+	r.GET("/test/:id", func(c *gin.Context) {
 		n := rand.Int63n(50)
 		time.Sleep(time.Duration(n) * time.Millisecond)
 		if n%2 == 0 {
-			c.String(http.StatusOK, "%s", "hello world!")
+			c.String(http.StatusOK, "%d: hello world!", c.Param("id"))
 			return
 		}
-		c.AbortWithStatus(http.StatusNotFound)
+		c.AbortWithStatus(http.StatusBadGateway)
 	})
 	for i := 0; i < 20; i++ {
-		performRequest(r, "GET", "/test")
+		performRequest(r, "GET", "/test/"+strconv.Itoa(i))
 	}
 	//
 	w := performRequest(r, "GET", "/metrics")

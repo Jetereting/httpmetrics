@@ -2,7 +2,6 @@ package httpmetrics
 
 import (
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -57,11 +56,14 @@ func (mux *ServeMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	t0 := time.Now()
-	incRequestTotalCount()
+	host := r.Host
+	incRequestTotalCount(host)
 	method := r.Method
 	sw := &statusWriter{ResponseWriter: w}
 	next.ServeHTTP(sw, r)
-	traceRequest(strconv.Itoa(sw.status), method, pattern, t0)
+	code := sw.status
+	incRequestCount(host, method, pattern, code)
+	observeRequestDuration(host, method, pattern, code, t0)
 }
 
 // GinMiddleware gin的中间件, 注册采集器指标接口
@@ -79,9 +81,12 @@ func GinMiddleware(r *gin.RouterGroup, metricsPath ...string) gin.HandlerFunc {
 			return
 		}
 		t0 := time.Now()
-		incRequestTotalCount()
+		host := c.Request.Host
+		incRequestTotalCount(host)
 		method := c.Request.Method
 		c.Next()
-		traceRequest(strconv.Itoa(c.Writer.Status()), method, path, t0)
+		code := c.Writer.Status()
+		incRequestCount(host, method, path, code)
+		observeRequestDuration(host, method, path, code, t0)
 	}
 }
