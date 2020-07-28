@@ -1,4 +1,4 @@
-module gogs.xiaoyuanjijiehao.com/ops/httpmetrics
+module gogs.xiaoyuanjijiehao.com/aag/httpmetrics
 
 go 1.14
 

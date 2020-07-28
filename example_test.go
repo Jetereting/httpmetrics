@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gogs.xiaoyuanjijiehao.com/ops/httpmetrics"
+	"gogs.xiaoyuanjijiehao.com/aag/httpmetrics"
 )
 
 func ExampleGinMiddleware() {
