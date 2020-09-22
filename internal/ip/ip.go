@@ -60,7 +60,6 @@ func (l *AllowList) ContainsIP(ip1 net.IP) bool {
 
 // ContainsString 是否包含目标ip
 func (l *AllowList) ContainsString(s string) bool {
-	fmt.Println(s)
 	ip := net.ParseIP(s)
 	if ip == nil {
 		return false
