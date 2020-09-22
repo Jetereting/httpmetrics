@@ -19,20 +19,20 @@ var (
 	requestTotalCount = promauto.NewCounterVec(prometheus.CounterOpts{
 		Namespace: namespace,
 		Subsystem: subsystem,
-		Name:      "requests_total",
-		Help:      "record requests total count",
+		Name:      "request_total",
+		Help:      "record request total count",
 	}, []string{"host"})
 	requestCount = promauto.NewCounterVec(prometheus.CounterOpts{
 		Namespace: namespace,
 		Subsystem: subsystem,
-		Name:      "requests_count",
-		Help:      "record requests count",
+		Name:      "request_count",
+		Help:      "record request count",
 	}, []string{"host", "method", "route", "code"})
 	requestDuration = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Namespace: namespace,
 		Subsystem: subsystem,
-		Name:      "requests_duration_seconds",
-		Help:      "record requests duration in second",
+		Name:      "request_duration_seconds",
+		Help:      "record request duration in second",
 		Buckets: []float64{
 			.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10, 15, 20, 25, 30, 45, 60,
 		},

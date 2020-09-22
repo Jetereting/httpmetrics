@@ -11,62 +11,62 @@ Prometheus 的 http 统计指标和中间件
 
 #### HTTP 指标
 
-- `# TYPE http_requests_total counter` HTTP 请求总数量计数器
+- `# TYPE http_request_total counter` HTTP 请求总数量计数器
 
 ```
-  http_requests_total{host="example.com"} 20
+  http_request_total{host="example.com"} 20
 ```
 
-- `# TYPE http_requests_count counter` HTTP 请求数量计数器
+- `# TYPE http_request_count counter` HTTP 请求数量计数器
 
 ```
-  http_requests_count{code="200",host="example.com",method="GET",route="/test/:id"} 12
-  http_requests_count{code="502",host="example.com",method="GET",route="/test/:id"} 8
+  http_request_count{code="200",host="example.com",method="GET",route="/test/:id"} 12
+  http_request_count{code="502",host="example.com",method="GET",route="/test/:id"} 8
 ```
 
-- `# TYPE http_requests_duration_seconds histogram` HTTP 请求持续时间直方图
+- `# TYPE http_request_duration_seconds histogram` HTTP 请求持续时间直方图
 
 ```
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.005"} 0
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.01"} 1
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.025"} 7
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.05"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.1"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.25"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.5"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="1"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="2.5"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="5"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="10"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="15"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="20"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="25"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="30"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="45"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="60"} 12
-  http_requests_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="+Inf"} 12
-  http_requests_duration_seconds_sum{code="200",host="example.com",method="GET",route="/test/:id"} 0.2993984
-  http_requests_duration_seconds_count{code="200",host="example.com",method="GET",route="/test/:id"} 12
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.005"} 0
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.01"} 1
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.025"} 4
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.05"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.1"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.25"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.5"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="1"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="2.5"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="5"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="10"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="15"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="20"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="25"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="30"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="45"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="60"} 8
-  http_requests_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="+Inf"} 8
-  http_requests_duration_seconds_sum{code="502",host="example.com",method="GET",route="/test/:id"} 0.20078440000000003
-  http_requests_duration_seconds_count{code="502",host="example.com",method="GET",route="/test/:id"} 8
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.005"} 0
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.01"} 1
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.025"} 7
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.05"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.1"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.25"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="0.5"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="1"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="2.5"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="5"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="10"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="15"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="20"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="25"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="30"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="45"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="60"} 12
+  http_request_duration_seconds_bucket{code="200",host="example.com",method="GET",route="/test/:id",le="+Inf"} 12
+  http_request_duration_seconds_sum{code="200",host="example.com",method="GET",route="/test/:id"} 0.2993984
+  http_request_duration_seconds_count{code="200",host="example.com",method="GET",route="/test/:id"} 12
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.005"} 0
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.01"} 1
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.025"} 4
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.05"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.1"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.25"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="0.5"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="1"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="2.5"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="5"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="10"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="15"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="20"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="25"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="30"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="45"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="60"} 8
+  http_request_duration_seconds_bucket{code="502",host="example.com",method="GET",route="/test/:id",le="+Inf"} 8
+  http_request_duration_seconds_sum{code="502",host="example.com",method="GET",route="/test/:id"} 0.20078440000000003
+  http_request_duration_seconds_count{code="502",host="example.com",method="GET",route="/test/:id"} 8
 ```
 
 #### Gin 中间件
