@@ -118,7 +118,7 @@ func (m *ServeMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if pattern == m.metricsPath {
 		if m.enableIPList &&
 			!m.allowIPs.ContainsString(getClientIP(r)) {
-			w.WriteHeader(http.StatusForbidden)
+			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -146,7 +146,7 @@ func GinMiddleware(r *gin.RouterGroup, opts ...Option) gin.HandlerFunc {
 	allowIPList := ip.LoadArray(options.allowIPList)
 	r.GET(options.metricsPath, func(c *gin.Context) {
 		if options.enableIPList && !allowIPList.ContainsString(c.ClientIP()) {
-			c.AbortWithStatus(http.StatusForbidden)
+			c.AbortWithStatus(http.StatusNotFound)
 			return
 		}
 		h.ServeHTTP(c.Writer, c.Request)
