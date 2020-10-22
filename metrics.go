@@ -7,7 +7,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/qingtao/version"
+	"gogs.xiaoyuanjijiehao.com/aag/goversion"
 )
 
 const (
@@ -74,10 +74,10 @@ func init() {
 		Name:      "build_info",
 		Help:      "app build info contain git branch commit-id .etc",
 		ConstLabels: prometheus.Labels{
-			"version": version.Version,
-			"branch":  version.GitBranch,
-			"tag":     version.GitTag,
-			"commit":  version.GitSHA,
+			"version": goversion.Version,
+			"branch":  goversion.GitBranch,
+			"tag":     goversion.GitTag,
+			"commit":  goversion.GitSHA,
 		},
 	}).Set(1)
 }
