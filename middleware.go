@@ -1,9 +1,12 @@
 package httpmetrics
 
 import (
+	"encoding/json"
+	"fmt"
 	"net"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -69,6 +72,17 @@ func (w *statusWriter) WriteHeader(statusCode int) {
 	w.ResponseWriter.WriteHeader(statusCode)
 }
 
+func (w *statusWriter) Write(b []byte) (int, error) {
+	var res struct {
+		FeedbackCode int `json:"FeedbackCode"`
+	}
+	_ = json.Unmarshal(b, &res)
+	if res.FeedbackCode != 0 {
+		w.status = res.FeedbackCode
+	}
+	return w.ResponseWriter.Write(b)
+}
+
 // ServeMux http 路由
 type ServeMux struct {
 	*http.ServeMux
@@ -110,6 +124,16 @@ func getClientIP(r *http.Request) string {
 	}
 
 	return ""
+}
+
+func getResponseStatus(w http.ResponseWriter) int {
+	h := w.Header()
+	fmt.Printf("%+v\n", h)
+	status, err := strconv.Atoi(w.Header().Get("status"))
+	if err != nil {
+		return 500
+	}
+	return status
 }
 
 // ServeHTTP 处理http请求, 并设置相关指标
@@ -172,12 +196,12 @@ func GinMiddleware(r *gin.RouterGroup, opts ...Option) gin.HandlerFunc {
 }
 
 // BeegoMiddleware 创建beego的中间件
-func BeegoMiddleware(opts ...Option) func(h http.Handler) func(http.ResponseWriter, *http.Request) {
+func BeegoMiddleware(opts ...Option) func(h http.Handler) http.Handler {
 	options := mergeOptions(opts...)
 	ph := promhttp.Handler()
 	allowIPList := ip.LoadArray(options.allowIPList)
-	return func(h http.Handler) func(http.ResponseWriter, *http.Request) {
-		return func(w http.ResponseWriter, r *http.Request) {
+	return func(h http.Handler) http.Handler {
+		metricsHandler := func(w http.ResponseWriter, r *http.Request) {
 			path := r.URL.Path
 			if path == options.metricsPath {
 				if allowIPList.ContainsString(getClientIP(r)) {
@@ -191,8 +215,8 @@ func BeegoMiddleware(opts ...Option) func(h http.Handler) func(http.ResponseWrit
 			host := r.Host
 			incRequestTotalCount(host)
 			method := r.Method
-			sw := &statusWriter{ResponseWriter: w}
-			h.ServeHTTP(w, r)
+			sw := &statusWriter{ResponseWriter: w, status: 200}
+			h.ServeHTTP(sw, r)
 			code := sw.status
 			incRequestCount(host, method, path, code)
 			if code == http.StatusNotFound {
@@ -200,6 +224,6 @@ func BeegoMiddleware(opts ...Option) func(h http.Handler) func(http.ResponseWrit
 			}
 			observeRequestDuration(host, method, path, code, t0)
 		}
+		return http.HandlerFunc(metricsHandler)
 	}
-
 }
