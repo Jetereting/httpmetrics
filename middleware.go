@@ -204,7 +204,7 @@ func BeegoMiddleware(opts ...Option) func(h http.Handler) http.Handler {
 		metricsHandler := func(w http.ResponseWriter, r *http.Request) {
 			path := r.URL.Path
 			if path == options.metricsPath {
-				if allowIPList.ContainsString(getClientIP(r)) {
+				if !options.enableIPList || allowIPList.ContainsString(getClientIP(r)) {
 					ph.ServeHTTP(w, r)
 					return
 				}
