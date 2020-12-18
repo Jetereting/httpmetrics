@@ -170,3 +170,36 @@ func GinMiddleware(r *gin.RouterGroup, opts ...Option) gin.HandlerFunc {
 		observeRequestDuration(host, method, path, code, t0)
 	}
 }
+
+// BeegoMiddleware 创建beego的中间件
+func BeegoMiddleware(opts ...Option) func(h http.Handler) func(http.ResponseWriter, *http.Request) {
+	options := mergeOptions(opts...)
+	ph := promhttp.Handler()
+	allowIPList := ip.LoadArray(options.allowIPList)
+	return func(h http.Handler) func(http.ResponseWriter, *http.Request) {
+		return func(w http.ResponseWriter, r *http.Request) {
+			path := r.URL.Path
+			if path == options.metricsPath {
+				if allowIPList.ContainsString(getClientIP(r)) {
+					ph.ServeHTTP(w, r)
+					return
+				}
+				http.NotFound(w, r)
+				return
+			}
+			t0 := time.Now()
+			host := r.Host
+			incRequestTotalCount(host)
+			method := r.Method
+			sw := &statusWriter{ResponseWriter: w}
+			h.ServeHTTP(w, r)
+			code := sw.status
+			incRequestCount(host, method, path, code)
+			if code == http.StatusNotFound {
+				return
+			}
+			observeRequestDuration(host, method, path, code, t0)
+		}
+	}
+
+}
